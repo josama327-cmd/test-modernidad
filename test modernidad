@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Avanzado: Modernidad en Europa</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .question-container {
+      background-color: #fff;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      max-width: 700px;
+    }
+    .options label {
+      display: block;
+      margin: 8px 0;
+      cursor: pointer;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 15px;
+      border: none;
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    #feedback {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    #score {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Test Avanzado: La Modernidad en Europa</h1>
+
+<div class="question-container" id="quiz-container"></div>
+
+<div id="score"></div>
+
+<script>
+const questions = [
+  {
+    type: "multiple",
+    question: "1. ¿Qué concepto se asocia con la independencia del Estado respecto a la religión?",
+    options: ["Secularismo", "Deísmo", "Socialismo", "Despotismo ilustrado"],
+    answer: "Secularismo",
+    feedback: "Correcto: el secularismo establece que el Estado no depende de ninguna religión."
+  },
+  {
+    type: "multiple",
+    question: "2. La Ilustración se conoce también como:",
+    options: ["El siglo de las luces", "La revolución industrial", "La contrarreforma", "El absolutismo"],
+    answer: "El siglo de las luces",
+    feedback: "Exacto: el siglo XVIII es llamado 'el siglo de las luces' por el auge del pensamiento racional."
+  },
+  {
+    type: "multiple",
+    question: "3. Una característica del despotismo ilustrado es:",
+    options: [
+      "Gobernar con el lema 'todo para el pueblo, pero sin el pueblo'",
+      "Promover el socialismo",
+      "Fomentar la apostasía de la cultura católica",
+      "Eliminar la monarquía"
+    ],
+    answer: "Gobernar con el lema 'todo para el pueblo, pero sin el pueblo'",
+    feedback: "Correcto: los monarcas ilustrados buscaban modernizar sin conceder participación política real."
+  },
+  {
+    type: "multiple",
+    question: "4. El deísmo propone:",
+    options: [
+      "Un Dios creador que no interviene en el mundo",
+      "El ateísmo radical",
+      "La soberanía del pueblo",
+      "El liberalismo económico"
+    ],
+    answer: "Un Dios creador que no interviene en el mundo",
+    feedback: "Correcto: el deísmo reconoce un creador pero rechaza la intervención divina en la vida diaria."
+  },
+  {
+    type: "multiple",
+    question: "5. Una consecuencia de la Revolución Francesa fue:",
+    options: [
+      "Surgimiento de las ideologías liberalismo y socialismo",
+      "Fin de la primera revolución industrial",
+      "Inicio del deísmo",
+      "Fundación del Río de la Plata"
+    ],
+    answer: "Surgimiento de las ideologías liberalismo y socialismo",
+    feedback: "Correcto: esta revolución dio origen a nuevas ideas políticas y a la división de izquierda-derecha."
+  },
+  {
+    type: "multiple",
+    question: "6. Una característica positiva de la Revolución Industrial inglesa fue:",
+    options: [
+      "Aumento de la producción y desarrollo tecnológico",
+      "Disminución de la riqueza mundial",
+      "Retroceso en la política europea",
+      "Desapareció el comercio en el Río de la Plata"
+    ],
+    answer: "Aumento de la producción y desarrollo tecnológico",
+    feedback: "Exacto: la industrialización permitió avances económicos y tecnológicos significativos."
+  },
+  {
+    type: "multiple",
+    question: "7. Un aspecto negativo de la Revolución Industrial inglesa fue:",
+    options: [
+      "Explotación laboral y malas condiciones de vida",
+      "Libertad política universal",
+      "Creación de la Ilustración",
+      "Surgimiento del liberalismo"
+    ],
+    answer: "Explotación laboral y malas condiciones de vida",
+    feedback: "Correcto: surgieron condiciones de trabajo duras y largas jornadas laborales."
+  },
+  {
+    type: "text",
+    question: "8. Explica brevemente qué significa 'apostasía de la cultura católica'.",
+    answer: "abandono o rechazo de la influencia de la religión católica en la sociedad",
+    feedback: "Correcto: se refiere a la pérdida de influencia cultural y social del catolicismo en la modernidad."
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+function showQuestion() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = "";
+  const q = questions[currentQuestion];
+
+  let html = `<h2>${q.question}</h2>`;
+  
+  if(q.type === "multiple"){
+    html += '<div class="options">';
+    q.options.forEach(option => {
+      html += `
+        <label>
+          <input type="radio" name="option" value="${option}"> ${option}
+        </label>`;
+    });
+    html += '</div>';
+  } else if(q.type === "text"){
+    html += `<input type="text" id="textAnswer" placeholder="Escribe tu respuesta aquí">`;
+  }
+
+  html += `<button onclick="submitAnswer()">Responder</button>`;
+  html += `<div id="feedback"></div>`;
+
+  container.innerHTML = html;
+}
+
+function submitAnswer() {
+  const q = questions[currentQuestion];
+  let userAnswer = "";
+
+  if(q.type === "multiple"){
+    const selected = document.querySelector('input[name="option"]:checked');
+    if(!selected){
+      alert("Selecciona una opción.");
+      return;
+    }
+    userAnswer = selected.value;
+  } else {
+    userAnswer = document.getElementById('textAnswer').value.trim().toLowerCase();
+  }
+
+  const feedbackDiv = document.getElementById('feedback');
+  
+  let correct = false;
+  if(q.type === "multiple"){
+    if(userAnswer === q.answer) correct = true;
+  } else {
+    if(userAnswer.includes(q.answer.split(' ')[0])) correct = true; // admite respuestas parciales
+  }
+
+  if(correct){
+    feedbackDiv.style.color = "green";
+    feedbackDiv.innerText = q.feedback;
+    score++;
+  } else {
+    feedbackDiv.style.color = "red";
+    feedbackDiv.innerText = `Incorrecto. Respuesta correcta: ${q.answer}`;
+  }
+
+  currentQuestion++;
+  
+  if(currentQuestion < questions.length){
+    setTimeout(showQuestion, 2500); // pasa a la siguiente pregunta tras 2.5s
+  } else {
+    setTimeout(showScore, 2500);
+  }
+}
+
+function showScore() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = "";
+  document.getElementById('score').innerText = `¡Test finalizado! Tu puntaje: ${score} de ${questions.length}`;
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>
